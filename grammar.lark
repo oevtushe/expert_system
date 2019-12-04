@@ -1,0 +1,36 @@
+start: file
+
+file: (rule NEWLINE)* defines EOLS questions NEWLINE*
+
+rule: expr_xor (IF_AND_ONLY_IF|IMPLIES) expr_xor
+
+expr_xor: expr_xor "^" expr_or
+     | expr_or
+
+expr_or: expr_or "|" expr_and
+    | expr_and
+
+expr_and: expr_and "+" expr_neg
+     | expr_neg
+
+expr_neg: BANG factor
+     | factor
+
+factor: val | "(" expr_xor ")"
+
+val: PROPOSITION
+
+defines: "="PROPOSITION*
+
+questions: "?"PROPOSITION+
+
+PROPOSITION: /[A-Z]/
+IMPLIES: "=>"
+IF_AND_ONLY_IF: "<=>"
+EOLS: NEWLINE+
+BANG: "!"
+COMMENT: /#.*/ EOLS
+
+%ignore " "
+%ignore COMMENT
+%import common.NEWLINE
