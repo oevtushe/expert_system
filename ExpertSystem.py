@@ -3,6 +3,7 @@ import SimplifyTree
 import logging
 from ResolveLhs import ResolveLhs
 import Validator
+from collections import defaultdict
 
 # if i met recursion, say it's recursion
 class ExpertSystem:
@@ -12,7 +13,7 @@ class ExpertSystem:
         interm = self._lk.parse(inp)
         smpl = SimplifyTree.SimplifyTree()
         self._tree = smpl.transform(interm)
-        self._facts = dict()
+        self._facts = defaultdict(lambda: False)
         self._questions = list()
         self._rules = list(self._tree.find_data('rule'))
         self._rl = ResolveLhs()
@@ -36,14 +37,11 @@ class ExpertSystem:
                     if res:
                         break
                 for rhv in list(r.children[2].find_data('val')):
-                    if not rhv.children[0] in self._facts or not self._facts[rhv.children[0]]:
+                    if not self._facts[rhv.children[0]]:
                         self._facts[rhv.children[0]] = res
                         logging.debug(f'set {rhv.children[0]} to {res}')
         for q in self._questions:
-            if q in self._facts:
-                print(f'{q} is {self._facts[q]}')
-            else:
-                print(f'{q} is False by default')
+            print(f'{q} is {self._facts[q]}')
 
     def _get_rules_with_rhs(self, val):
         res = set()
@@ -70,14 +68,11 @@ class ExpertSystem:
         stacked_rules = set()
         for var in lst:
             rset = self._get_rules_with_rhs(var)
-            self._facts[var] = False
             if not rset:
                 print(f'{var} there\'s no rule that resolves it, set it as False')
-                self._facts[var] = False
                 continue
             if not self._check_rules_rhs(rset):
                 print(f'{var} is set as False, due to invalid rule for it')
-                self._facts[var] = False
                 continue
             diff = rset.difference(stacked_rules)
             if diff:
