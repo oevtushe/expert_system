@@ -9,8 +9,8 @@ logging.basicConfig(level=logging.DEBUG)
 def main(argc, argv):
     with open(argv[1]) as f:
         content = f.read()
-    logging.debug(f'content start')
-    logging.debug(f'\n{content}')
+    logging.debug(f'content start (stripped)')
+    logging.debug(f'\n{content.strip()}')
     logging.debug(f'content end')
     es = ExpertSystem(content)
     es.resolve()
