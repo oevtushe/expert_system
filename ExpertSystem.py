@@ -51,8 +51,13 @@ class ExpertSystem:
                 res.add(rule)
         return res
         
-    def _get_lhs_vars(self, rule):
-        return [x.children[0].value for x in list(rule.children[0].find_data('val'))]
+    def _vars(self, rule, side):
+        if side == 'l':
+            idx = 0
+        elif side == 'r':
+            idx = 2
+        for x in list(rule.children[idx].find_data('val')):
+            yield x.children[0].value
 
     def _check_rules_rhs(self, rules):
         for r in rules:
@@ -79,13 +84,12 @@ class ExpertSystem:
                 stack.append(diff)
                 stacked_rules.update(rset)
                 for r in rset:
-                    lhs = self._get_lhs_vars(r)
-                    for x in lhs:
-                        if not x in self._facts:
-                            logging.debug(f'{x} is not resolved, queue for resolving')
-                            lst.append(x)
+                    for v in self._vars(r, 'l'):
+                        if not v in self._facts:
+                            logging.debug(f'{v} is not resolved, queue for resolving')
+                            lst.append(v)
                         else:
-                            logging.debug(f'{x} is known')
+                            logging.debug(f'{v} is known')
             else:
                 logging.debug(f'Stack already has a rule to resolve {var}')
         logging.debug(f'stack: {stack}')
