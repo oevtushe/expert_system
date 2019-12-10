@@ -29,17 +29,16 @@ class ExpertSystem:
     def resolve(self):
         stack = self._check_rules(self._questions)
         if stack:
-            for v, rlst in reversed(stack):
+            for rset in reversed(stack):
                 res = False
-                for r in rlst:
+                for r in rset:
                     res = self._rl.transform(r.children[0], self._facts)
-                    logging.debug(f'{v} resolved as {res} from rule {r}')
                     if res:
                         break
                 for rhv in list(r.children[2].find_data('val')):
-                    logging.debug(f'set {rhv.children[0]} to {res}')
-                    if rhv.children[0] not in self._facts:
+                    if not rhv.children[0] in self._facts or not self._facts[rhv.children[0]]:
                         self._facts[rhv.children[0]] = res
+                        logging.debug(f'set {rhv.children[0]} to {res}')
         for q in self._questions:
             if q in self._facts:
                 print(f'{q} is {self._facts[q]}')
@@ -68,8 +67,10 @@ class ExpertSystem:
     def _check_rules(self, q):
         lst = [] + q
         stack = []
+        stacked_rules = set()
         for var in lst:
             rset = self._get_rules_with_rhs(var)
+            self._facts[var] = False
             if not rset:
                 print(f'{var} there\'s no rule that resolves it, set it as False')
                 self._facts[var] = False
@@ -78,18 +79,20 @@ class ExpertSystem:
                 print(f'{var} is set as False, due to invalid rule for it')
                 self._facts[var] = False
                 continue
-            if any(y.intersection(rset) for x,y in stack):
-                print('recursion detected, ruleset is ill-formed exiting...')
-                return None
-            stack.append((var, rset))
-            for r in rset:
-                lhs = self._get_lhs_vars(r)
-                for x in lhs:
-                    if not x in self._facts:
-                        logging.debug(f'{x} is not resolved, queue for resolving')
-                        lst.append(x)
-                    else:
-                        logging.debug(f'{x} is known')
+            diff = rset.difference(stacked_rules)
+            if diff:
+                stack.append(diff)
+                stacked_rules.update(rset)
+                for r in rset:
+                    lhs = self._get_lhs_vars(r)
+                    for x in lhs:
+                        if not x in self._facts:
+                            logging.debug(f'{x} is not resolved, queue for resolving')
+                            lst.append(x)
+                        else:
+                            logging.debug(f'{x} is known')
+            else:
+                logging.debug(f'Stack already has a rule to resolve {var}')
         logging.debug(f'stack: {stack}')
         return stack
 
