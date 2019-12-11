@@ -1,0 +1,9 @@
+A => B + C
+C => D
+
+=D
+?S
+#=D -S
+#=R +K -M
+#=P +KM -I
+#=P +K -MOI
