@@ -1,0 +1,8 @@
+A + B + C + D | K | M ^ D ^ S ^ R + L => Z
+!Q + !W + E | !T | !Y | !U => H
+A ^ B ^ C ^ D ^ R => S
+A | B | C | D | R => S
+A + B + C + D + R => S
+
+=AMDKCB
+?Z

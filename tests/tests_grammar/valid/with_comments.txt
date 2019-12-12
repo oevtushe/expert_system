@@ -1,0 +1,8 @@
+# p
+A + B | C ^ !D => S #stupid one
+A + B | C ^ !D => S
+# hello
+=ACD
+# hola
+?S
+# hi
