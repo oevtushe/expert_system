@@ -2,7 +2,7 @@ start: file
 
 file: (rule NEWLINE)* defines EOLS questions NEWLINE*
 
-rule: expr_xor (IF_AND_ONLY_IF|IMPLIES) expr_xor
+rule: expr_xor IMPLIES expr_xor
 
 expr_xor: expr_xor "^" expr_or
      | expr_or
@@ -26,7 +26,6 @@ questions: "?"PROPOSITION+
 
 PROPOSITION: /[A-Z]/
 IMPLIES: "=>"
-IF_AND_ONLY_IF: "<=>"
 EOLS: NEWLINE+
 BANG: "!"
 COMMENT: /#.*/ EOLS
