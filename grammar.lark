@@ -1,6 +1,6 @@
 start: file
 
-file: (rule NEWLINE)* defines EOLS questions NEWLINE*
+file: NEWLINE* (rule NEWLINE+)+ defines NEWLINE+ questions NEWLINE*
 
 rule: expr_xor IMPLIES expr_xor
 
@@ -26,7 +26,6 @@ questions: "?"PROPOSITION+
 
 PROPOSITION: /[A-Z]/
 IMPLIES: "=>"
-EOLS: NEWLINE+
 BANG: "!"
 COMMENT: /#.*/ EOLS
 
