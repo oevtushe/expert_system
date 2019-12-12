@@ -27,7 +27,7 @@ questions: "?"PROPOSITION+
 PROPOSITION: /[A-Z]/
 IMPLIES: "=>"
 BANG: "!"
-COMMENT: /#.*/ EOLS
+COMMENT: /#.*/
 
 %ignore " "
 %ignore COMMENT
