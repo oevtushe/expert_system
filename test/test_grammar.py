@@ -6,7 +6,7 @@ class TestGrammar(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls._tests_path = 'tests_grammar/'
-        cls._lark = lark.Lark.open('../grammar.lark')
+        cls._lark = lark.Lark.open('expert_system/grammar.lark')
 
     def test_valid_syntax(self):
         for fname in glob.glob(self._tests_path + 'valid/*.txt'):

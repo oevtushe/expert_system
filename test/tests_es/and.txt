@@ -1,0 +1,10 @@
+A + B => C
+
+=A
+?C
+
+#=A -CB
+#=AB +C
+#=B -CA
+#=C -AB +C
+#= -ABC

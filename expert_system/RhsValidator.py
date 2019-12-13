@@ -4,7 +4,12 @@ from lark import Tree
 class InvalidRhs(Exception):
     pass
 
-class Validator(Transformer):
+class RhsValidator(Transformer):
+    """Class validates right hand side
+       of rules.
+
+       |,!,^ are forbidden in rhs
+    """
     def expr_and(self, child):
         return child[0]
 
