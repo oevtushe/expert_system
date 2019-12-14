@@ -1,23 +1,25 @@
 import lark
-import SimplifyTree
+from expert_system.SimplifyTree import SimplifyTree
 import logging
-from ResolveLhs import ResolveLhs
-import Validator
+from expert_system.ResolveLhs import ResolveLhs
+from expert_system.RhsValidator import RhsValidator
 from collections import defaultdict
 
 # if i met recursion, say it's recursion
 class ExpertSystem:
-    def __init__(self, inp):
-        logging.basicConfig(level=logging.DEBUG)
-        self._lk = lark.Lark.open('grammar.lark')
-        interm = self._lk.parse(inp)
-        smpl = SimplifyTree.SimplifyTree()
-        self._tree = smpl.transform(interm)
+    def __init__(self):
+        logging.basicConfig()
+        self._lk = lark.Lark.open('expert_system/grammar.lark')
+        self._smpl = SimplifyTree()
+        self._tree = None
         self._facts = defaultdict(lambda: False)
         self._questions = list()
-        self._rules = list(self._tree.find_data('rule'))
         self._rl = ResolveLhs()
-        self._validator = Validator.Validator()
+        self._validator = RhsValidator()
+
+    def _parse_inp(self, inp):
+        interm = self._lk.parse(inp)
+        self._tree = self._smpl.transform(interm)
         def_tree = list(self._tree.find_data('defines'))[0]
         for v in def_tree.children:
             self._facts[v.value] = True
@@ -27,7 +29,13 @@ class ExpertSystem:
         logging.debug(f'facts: {self._facts}')
         logging.debug(f'questions: {self._questions}')
 
-    def resolve(self):
+    def _reset(self):
+        self._tree = None
+        self._facts.clear()
+        self._questions.clear()
+
+    def resolve(self, inp):
+        self._parse_inp(inp)
         stack = self._check_rules(self._questions)
         if stack:
             for rset in reversed(stack):
@@ -40,12 +48,13 @@ class ExpertSystem:
                     if not self._facts[rhv.children[0]]:
                         self._facts[rhv.children[0]] = res
                         logging.debug(f'set {rhv.children[0]} to {res}')
-        for q in self._questions:
-            print(f'{q} is {self._facts[q]}')
+        res = {q:self._facts[q] for q in self._questions}
+        self._reset()
+        return res
 
     def _get_rules_with_rhs(self, val):
         res = set()
-        for rule in self._rules:
+        for rule in list(self._tree.find_data('rule')):
             if any(x.children[0] == val for x in list(rule.children[2].find_data('val'))):
                 logging.debug(f'found {val} in {rule}')
                 res.add(rule)
@@ -74,10 +83,10 @@ class ExpertSystem:
         for var in lst:
             rset = self._get_rules_with_rhs(var)
             if not rset:
-                print(f'{var} there\'s no rule that resolves it, set it as False')
+                logging.debug(f'{var} there\'s no rule that resolves it, set it as False')
                 continue
             if not self._check_rules_rhs(rset):
-                print(f'{var} is set as False, due to invalid rule for it')
+                logging.debug(f'{var} is set as False, due to invalid rule for it')
                 continue
             diff = rset.difference(stacked_rules)
             if diff:

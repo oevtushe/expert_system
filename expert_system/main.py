@@ -2,9 +2,9 @@
 
 import sys
 import logging
-from ExpertSystem import ExpertSystem
+from expert_system.ExpertSystem import ExpertSystem
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig()
 
 def main(argc, argv):
     with open(argv[1]) as f:
@@ -12,8 +12,10 @@ def main(argc, argv):
     logging.debug(f'content start (stripped)')
     logging.debug(f'\n{content.strip()}')
     logging.debug(f'content end')
-    es = ExpertSystem(content)
-    es.resolve()
+    es = ExpertSystem()
+    res = es.resolve(content)
+    for k,v in res.items():
+        print(f'{k} is {v}')
 
 if __name__ == '__main__':
     main(len(sys.argv), sys.argv)
