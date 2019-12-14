@@ -40,30 +40,16 @@ class TestParser:
        and what true after processing such input by expert
        system
     """
-    def __init__(self, **kwargs):
-        """kwargs are checked for key 'file'
-           which specifies the path to the file
-           with valid expert system input and
-           for 'content' which specifies
-           multiline string with valid expert
-           system input
-        """
-        self._content = ''
-        if not 'file' in kwargs and not 'content' in kwargs:
-            raise TestParserError('file or content argument expected')
-        if 'content' in kwargs:
-            self._content = kwargs['content']
-        self._defines_format = r'(?m)^=[A-Z]*$'
-        self._questions_format = r'(?m)^\?[A-Z]+$'
-        self._cmnt_format = r'(?m)^#(?P<defines>=[A-Z]*)'
-        self._cmnt_format += r'( \+(?P<pos>[A-Z]+))?'
-        self._cmnt_format += r'( -(?P<neg>[A-Z]+))?$'
-        if not self._content:
-            with open(kwargs['file']) as f:
-                self._content = f.read()
 
-    def parse(self):
-        """parse() -> generator which
+    _defines_format = r'(?m)^=[A-Z]*$'
+    _questions_format = r'(?m)^\?[A-Z]+$'
+    _cmnt_format = r'(?m)^#(?P<defines>=[A-Z]*)'
+    _cmnt_format += r'( \+(?P<pos>[A-Z]+))?'
+    _cmnt_format += r'( -(?P<neg>[A-Z]+))?$'
+
+    @classmethod
+    def parse(cls, content):
+        """parse(content) -> generator which
            generates (text, pos, neg) for every
            comment line in input with specified format as below.
            'text' is multiline string
@@ -79,13 +65,13 @@ class TestParser:
            but if both are absent TestParserError
            is raised
         """
-        for match in re.finditer(self._cmnt_format, self._content):
+        for match in re.finditer(cls._cmnt_format, content):
             new_defines = match.group('defines')
             pos = match.group('pos')
             neg = match.group('neg')
             if not pos and not neg:
                 raise TestParserError('+ or - facts must be defined')
             new_questions = '?' + (pos or '') + (neg or '')
-            imds = re.sub(self._defines_format, new_defines, self._content) 
-            imds = re.sub(self._questions_format, new_questions, imds)
+            imds = re.sub(cls._defines_format, new_defines, content) 
+            imds = re.sub(cls._questions_format, new_questions, imds)
             yield (imds, pos, neg)

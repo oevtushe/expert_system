@@ -1,27 +1,31 @@
 import unittest
-import TestParser
+from test.TestParser import TestParser
+from test.TestParser import TestParserError
 
 class TestTestParser(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls._tests_dir = 'testparser_tests/'
+        cls._tests_dir = 'test/testparser_tests/'
+
+    @staticmethod
+    def _read_tf(fpath):
+        with open(fpath) as f:
+            content = f.read()
+        return content
 
     def test_no_spec_syntax(self):
         fname_in = self._tests_dir + 'test_no_spec_syntax.txt'
-        tp = TestParser.TestParser(file=fname_in)
         i = 0
-        for item in tp.parse():
+        for item in TestParser.parse(self._read_tf(fname_in)):
             i += 1
         self.assertEqual(i, 0)
 
     def test_neg_and_pos_exp(self):
         fname_in = self._tests_dir + 'test_neg_and_pos_exp_in.txt'
         fname_out = self._tests_dir + 'test_neg_and_pos_exp_out.txt'
-        with open(fname_out) as f:
-            res = f.read()
-        tp = TestParser.TestParser(file=fname_in)
+        res = self._read_tf(fname_out)
         i = 0
-        for item in tp.parse():
+        for item in TestParser.parse(self._read_tf(fname_in)):
             i += 1
             self.assertEqual(len(item), 3)
             self.assertEqual(item[0], res)
@@ -32,11 +36,9 @@ class TestTestParser(unittest.TestCase):
     def test_pos_exp(self):
         fname_in = self._tests_dir + 'test_pos_exp_in.txt'
         fname_out = self._tests_dir + 'test_pos_exp_out.txt'
-        with open(fname_out) as f:
-            res = f.read()
-        tp = TestParser.TestParser(file=fname_in)
+        res = self._read_tf(fname_out)
         i = 0
-        for item in tp.parse():
+        for item in TestParser.parse(self._read_tf(fname_in)):
             i += 1
             self.assertEqual(len(item), 3)
             self.assertEqual(item[0], res)
@@ -47,11 +49,9 @@ class TestTestParser(unittest.TestCase):
     def test_neg_exp(self):
         fname_in = self._tests_dir + 'test_neg_exp_in.txt'
         fname_out = self._tests_dir + 'test_neg_exp_out.txt'
-        with open(fname_out) as f:
-            res = f.read()
-        tp = TestParser.TestParser(file=fname_in)
+        res = self._read_tf(fname_out)
         i = 0
-        for item in tp.parse():
+        for item in TestParser.parse(self._read_tf(fname_in)):
             i += 1
             self.assertEqual(len(item), 3)
             self.assertEqual(item[0], res)
@@ -61,10 +61,9 @@ class TestTestParser(unittest.TestCase):
 
     def test_no_exp(self):
         fname_in = self._tests_dir + 'test_no_exp.txt'
-        tp = TestParser.TestParser(file=fname_in)
         i = 0
-        with self.assertRaises(TestParser.TestParserError):
-            for m in tp.parse():
+        with self.assertRaises(TestParserError):
+            for m in TestParser.parse(self._read_tf(fname_in)):
                 i += 1
                 pass
         self.assertEqual(i, 0)
@@ -75,15 +74,12 @@ class TestTestParser(unittest.TestCase):
         for i in range(0, 4):
             fname_out = self._tests_dir + 'test_multiple_exp_out'
             fname_out += str(i + 1) + '.txt'
-            res = ''
-            with open(fname_out) as f:
-                res = f.read()
+            res = self._read_tf(fname_out)
             exp_text.append(res)
         exp_pos = [None, 'K', 'KM', 'K']
         exp_neg = ['S', 'M', 'I', 'MOI']
-        tp = TestParser.TestParser(file=fname_in)
 
-        for i, item in enumerate(tp.parse()):
+        for i, item in enumerate(TestParser.parse(self._read_tf(fname_in))):
             self.assertEqual(len(item), 3)
             self.assertEqual(item[0], exp_text[i])
             self.assertEqual(item[1], exp_pos[i])
