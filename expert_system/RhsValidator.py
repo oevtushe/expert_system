@@ -11,7 +11,7 @@ class RhsValidator(Transformer):
        |,!,^ are forbidden in rhs
     """
     def expr_and(self, child):
-        return child[0]
+        return child[0] and child[1]
 
     def expr_or(self, child):
         return False
@@ -22,5 +22,8 @@ class RhsValidator(Transformer):
     def expr_neg(self, child):
         return False
 
-    def factor(self, child):
+    def fact(self, child):
+        return child[0]
+
+    def val(self, child):
         return True
