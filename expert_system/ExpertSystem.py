@@ -81,11 +81,11 @@ class ExpertSystem:
         return res
 
     def _get_rules_with_rhs(self, val):
-        res = set()
+        res = list()
         for rule in list(self._tree.find_data('rule')):
             if any(x.children[0] == val for x in list(rule.children[2].find_data('val'))):
                 logging.debug(f'found {val} in {rule.pretty()}')
-                res.add(rule)
+                res.append(rule)
         return res
         
     def _vars(self, rule, side):
@@ -109,15 +109,14 @@ class ExpertSystem:
         for dep in deplst:
             kiddo = dep.node
             for var in dep.flst:
-                #TODO: replace with list
-                rset = self._get_rules_with_rhs(var)
-                if not rset:
+                rlist = self._get_rules_with_rhs(var)
+                if not rlist:
                     logging.debug(f'{var} there\'s no rule that resolves it, set it as False')
                     continue
-                if not self._check_rules_rhs(rset):
+                if not self._check_rules_rhs(rlist):
                     logging.debug(f'{var} is set as False, due to invalid rule for it')
                     continue
-                for r in rset:
+                for r in rlist:
                     logging.debug(f'Looking for {r.pretty()} in {root}')
                     found = root.find(r)
                     if found:
