@@ -74,7 +74,6 @@ class ExpertSystem:
     def resolve(self, inp):
         self._parse_inp(inp)
         root = self._check_rules(self._questions)
-        root.visit_dfs(logging.debug)
         root.visit_dfs(self._rule_solver)
         res = {q:self._facts[q] for q in self._questions}
         self._reset()
@@ -136,7 +135,6 @@ class ExpertSystem:
                             logging.debug(f'{v} is known')
                     if new_dep.flst:
                         deplst.append(new_dep)
-        root.visit_dfs(logging.debug)
         return root
 
 class _Dep:
