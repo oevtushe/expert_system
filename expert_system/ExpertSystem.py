@@ -135,7 +135,7 @@ class ExpertSystem:
                             logging.debug(f'{v} is known')
                     if new_dep.flst:
                         deplst.append(new_dep)
-        logging.debug(f'tree: {root.visit_dfs(print)}')
+        root.visit_dfs(logging.debug)
         return root
 
 class _Dep:
