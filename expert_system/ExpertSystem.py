@@ -118,7 +118,7 @@ class ExpertSystem:
                     continue
                 self._remove_unsupported(rlist)
                 for r in rlist:
-                    logging.debug(f'Looking for {r.pretty()} in {root}')
+                    logging.debug(f'Looking for {r.pretty()}')
                     found = root.find(r)
                     if found:
                         logging.debug(f'rule {found._rule.pretty()} is already in the tree, linking')
@@ -126,7 +126,7 @@ class ExpertSystem:
                         continue
                     new_kiddo = _MyTree(r)
                     kiddo.add_child(new_kiddo)
-                    logging.debug(f'Adding new kiddo: {new_kiddo}')
+                    logging.debug(f'Adding new kiddo')
                     new_dep = (_Dep(new_kiddo, []))
                     for v in self._vars(r, 'l'):
                         if not v in self._facts:
