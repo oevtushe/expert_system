@@ -1,0 +1,10 @@
+A + K => B + C
+R => B | C
+S | M => B + C
+
+=RAM
+?BC
+
+#=RAM +BC
+#=RA -BC
+#=AK +BC
