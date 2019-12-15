@@ -96,12 +96,15 @@ class ExpertSystem:
         for x in list(rule.children[idx].find_data('val')):
             yield x.children[0].value
 
-    def _check_rules_rhs(self, rules):
+    def _remove_unsupported(self, rules):
+        to_del = []
         for r in rules:
             res = self._validator.transform(r.children[2])
             if not res:
-                return False
-        return True
+                to_del.append(r)
+        for x in to_del:
+            logging.debug(f'Unsupported: {x.pretty()}')
+            rules.remove(x)
 
     def _check_rules(self, qes):
         root = _MyTree(None)
@@ -113,9 +116,7 @@ class ExpertSystem:
                 if not rlist:
                     logging.debug(f'{var} there\'s no rule that resolves it, set it as False')
                     continue
-                if not self._check_rules_rhs(rlist):
-                    logging.debug(f'{var} is set as False, due to invalid rule for it')
-                    continue
+                self._remove_unsupported(rlist)
                 for r in rlist:
                     logging.debug(f'Looking for {r.pretty()} in {root}')
                     found = root.find(r)
