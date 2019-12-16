@@ -7,10 +7,15 @@ from collections import defaultdict
 
 class _MyGraph:
     def __init__(self, rule):
+        """Builds a new _MyGraph node
+           with 'rule' as data
+        """
         self._rule = rule
         self._clst = []
 
     def add_child(self, child):
+        """Add a children
+        """
         self._clst.append(child)
 
     def _find(self, rule, visited):
@@ -26,6 +31,12 @@ class _MyGraph:
 
 
     def find(self, rule):
+        """find(self, rule) -> _MyGraph containing
+           the rule
+
+           Tracks visited vertexes so none will be
+           visited twice
+        """
         visited = set()
         return self._find(rule, visited)
 
@@ -42,6 +53,13 @@ class _MyGraph:
             fu(self._rule)
 
     def visit_dfs(self, fu):
+        """Traverses the graph with dfs
+           Applies a function 'fu' on each vertex's data it
+           visits
+
+           Tracks visited vertexes so none will be
+           visited twice
+        """
         visited = set()
         self._visit_dfs(visited, fu)
 
@@ -81,6 +99,9 @@ class ExpertSystem:
                 logging.debug(f'set {rhv.children[0]} to {res}')
 
     def resolve(self, inp):
+        """resolve(self, inp) -> a dict with asked
+           questions and their answers
+        """
         self._parse_inp(inp)
         root = self._build_graph(self._questions)
         root.visit_dfs(self._rule_solver)
