@@ -135,10 +135,15 @@ class ExpertSystem:
             logging.debug(f'Unsupported: {x.pretty()}')
             rules.remove(x)
 
+    class _Dep:
+        def __init__(self, node, flst):
+            self.node = node
+            self.flst = flst
+
 
     def _build_graph(self, qes):
         root = _MyGraph(None)
-        deplst = [_Dep(root, [q]) for q in qes]
+        deplst = [ExpertSystem._Dep(root, [q]) for q in qes]
         for dep in deplst:
             kiddo = dep.node
             for var in dep.flst:
@@ -157,7 +162,7 @@ class ExpertSystem:
                     new_kiddo = _MyGraph(r)
                     kiddo.add_child(new_kiddo)
                     logging.debug(f'Adding new kiddo')
-                    new_dep = (_Dep(new_kiddo, []))
+                    new_dep = (ExpertSystem._Dep(new_kiddo, []))
                     for v in self._vars(r, 'l'):
                         if not v in self._facts:
                             logging.debug(f'{v} is not resolved, queue for resolving')
@@ -167,8 +172,3 @@ class ExpertSystem:
                     if new_dep.flst:
                         deplst.append(new_dep)
         return root
-
-class _Dep:
-    def __init__(self, node, flst):
-        self.node = node
-        self.flst = flst
