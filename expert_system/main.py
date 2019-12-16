@@ -1,5 +1,3 @@
-#!/usr/bin/python3.6
-
 import sys
 import logging
 from expert_system.ExpertSystem import ExpertSystem
