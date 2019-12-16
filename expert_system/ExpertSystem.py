@@ -5,7 +5,7 @@ from expert_system.ResolveLhs import ResolveLhs
 from expert_system.RhsValidator import RhsValidator
 from collections import defaultdict
 
-class _MyTree:
+class _MyGraph:
     def __init__(self, rule):
         self._rule = rule
         self._clst = []
@@ -82,7 +82,7 @@ class ExpertSystem:
 
     def resolve(self, inp):
         self._parse_inp(inp)
-        root = self._check_rules(self._questions)
+        root = self._build_graph(self._questions)
         root.visit_dfs(self._rule_solver)
         res = {q:self._facts[q] for q in self._questions}
         self._reset()
@@ -114,8 +114,9 @@ class ExpertSystem:
             logging.debug(f'Unsupported: {x.pretty()}')
             rules.remove(x)
 
-    def _check_rules(self, qes):
-        root = _MyTree(None)
+
+    def _build_graph(self, qes):
+        root = _MyGraph(None)
         deplst = [_Dep(root, [q]) for q in qes]
         for dep in deplst:
             kiddo = dep.node
@@ -132,7 +133,7 @@ class ExpertSystem:
                         logging.debug(f'rule {found._rule.pretty()} is already in the tree, linking')
                         kiddo.add_child(found)
                         continue
-                    new_kiddo = _MyTree(r)
+                    new_kiddo = _MyGraph(r)
                     kiddo.add_child(new_kiddo)
                     logging.debug(f'Adding new kiddo')
                     new_dep = (_Dep(new_kiddo, []))
