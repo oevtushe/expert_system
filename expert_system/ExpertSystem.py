@@ -13,10 +13,21 @@ class _MyGraph:
         self._rule = rule
         self._clst = []
 
+    def get_rule(self):
+        """get_rule() -> rule
+        """
+        return self._rule
+
     def add_child(self, child):
         """Add a children
         """
         self._clst.append(child)
+
+    def num_childs(self):
+        """num_childs(self) -> number of
+           children
+        """
+        return len(self._clst)
 
     def _find(self, rule, visited):
         if rule == self._rule:
