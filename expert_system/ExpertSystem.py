@@ -13,12 +13,21 @@ class _MyTree:
     def add_child(self, child):
         self._clst.append(child)
 
-    def find(self, rule):
+    def _find(self, rule, visited):
         if rule == self._rule:
             return self
+        visited.add(self._rule)
         for child in self._clst:
-            return child.find(rule)
+            if not child._rule in visited:
+                res = child._find(rule, visited)
+                if res:
+                    return res
         return None
+
+
+    def find(self, rule):
+        visited = set()
+        return self._find(rule, visited)
 
     def _visit_dfs(self, visited, fu):
         visited.add(self._rule)
