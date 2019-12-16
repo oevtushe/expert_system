@@ -19,7 +19,6 @@ class SimplifyTree(Transformer):
             return child[0]
         return Tree('expr_xor', child)
 
-    #TODO: Two children for !, what ?
     def expr_neg(self, child):
         if len(child) < 2:
             return child[0]
