@@ -1,0 +1,20 @@
+dependencies list contains dependencies with root as dep.node
+    and question as elem in dep.facts list
+for each dependency in dependencies list
+    rlist <- Empty
+    for each fact in dependency.facts
+        rlist += all rules with fact in right hand side (rhs)
+    for each rule in rlist
+        if rule is already in the graph
+            add node containing the rule as children to dependency.node
+            continue
+        create new node with rule as data
+        add created node as children to dependency.node
+        create new dependency with above node and empty facts list
+        for every fact in left hand side (lhs) of rule
+            if fact is not resolved
+                add fact to facts list in created dependency
+        if created dependency facts list is not empty
+            add created dependency to dependencies list
+
+traverse built graph with dfs and resolve each visited node
