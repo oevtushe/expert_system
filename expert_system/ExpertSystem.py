@@ -160,29 +160,30 @@ class ExpertSystem:
         deplst = [ExpertSystem._Dep(root, [q]) for q in qes]
         for dep in deplst:
             kiddo = dep.node
+            rlist = []
             for var in dep.flst:
-                rlist = self._get_rules_with_rhs(var)
+                rlist += self._get_rules_with_rhs(var)
                 if not rlist:
                     logging.debug(f'{var} there\'s no rule that resolves it, set it as False')
                     continue
-                self._remove_unsupported(rlist)
-                for r in rlist:
-                    logging.debug(f'Looking for {r.pretty()}')
-                    found = root.find(r)
-                    if found:
-                        logging.debug(f'rule {found._rule.pretty()} is already in the tree, linking')
-                        kiddo.add_child(found)
-                        continue
-                    new_kiddo = _MyGraph(r)
-                    kiddo.add_child(new_kiddo)
-                    logging.debug(f'Adding new kiddo')
-                    new_dep = (ExpertSystem._Dep(new_kiddo, []))
-                    for v in self._vars(r, 'l'):
-                        if not v in self._facts:
-                            logging.debug(f'{v} is not resolved, queue for resolving')
-                            new_dep.flst.append(v)
-                        else:
-                            logging.debug(f'{v} is known')
-                    if new_dep.flst:
-                        deplst.append(new_dep)
+            self._remove_unsupported(rlist)
+            for r in rlist:
+                logging.debug(f'Looking for {r.pretty()}')
+                found = root.find(r)
+                if found:
+                    logging.debug(f'rule {found._rule.pretty()} is already in the tree, linking')
+                    kiddo.add_child(found)
+                    continue
+                new_kiddo = _MyGraph(r)
+                kiddo.add_child(new_kiddo)
+                logging.debug(f'Adding new kiddo')
+                new_dep = (ExpertSystem._Dep(new_kiddo, []))
+                for v in self._vars(r, 'l'):
+                    if not v in self._facts:
+                        logging.debug(f'{v} is not resolved, queue for resolving')
+                        new_dep.flst.append(v)
+                    else:
+                        logging.debug(f'{v} is known')
+                if new_dep.flst:
+                    deplst.append(new_dep)
         return root
