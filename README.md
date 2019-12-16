@@ -7,3 +7,9 @@ Big O notation
 
 where N is a number of rules, (V,E) is a number of vertices and edges
 respectively
+
+## How to run:
+python3.6 -m expert_system.main \<filepath\>
+
+## How to test:
+python3.6 -m unittest
