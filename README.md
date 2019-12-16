@@ -27,7 +27,7 @@ Facts can be `false` or `true`,
 by default all facts are `false`
 
 ### Operators
-`|,+,^` are logical operators `or`,`and`,`xor` respectively
+`|,+,^,!` are logical operators `or`,`and`,`xor`,`not` respectively
 
 ### Implication
 `=>` is an implication that can change facts
