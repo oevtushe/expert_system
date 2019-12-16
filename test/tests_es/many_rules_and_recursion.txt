@@ -1,0 +1,16 @@
+B => A
+D + E => B
+G + H => F
+I + J => G
+I => J
+J => I
+G => H
+L + M =>K
+O + P => L + N
+N => M
+
+=DEP
+
+?AFKP
+
+#=DEP +AP -KF
