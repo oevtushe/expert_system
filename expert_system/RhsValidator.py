@@ -1,9 +1,6 @@
 from lark import Transformer
 from lark import Tree
 
-class InvalidRhs(Exception):
-    pass
-
 class RhsValidator(Transformer):
     """Class validates right hand side
        of rules.
