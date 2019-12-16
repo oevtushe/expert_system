@@ -75,6 +75,44 @@ class _MyGraph:
         self._visit_dfs(visited, fu)
 
 class ExpertSystem:
+    """A backward-chaining inference engine.
+
+       Example of input
+
+       A => B
+       B | E => C + D
+
+       =A
+       ?DC
+
+       what should be read as
+
+       A implies B
+       B or E implies C and D
+
+       initially A is true
+       what is D and C ?
+
+       expert system processes such input and answers
+       the given question
+
+       A,B,C,D,E ... is facts
+       Facts can be false or true
+
+       |,+,^ is logical operators or,and,xor respectively
+
+       => is an implication that can change facts
+       if left hand side of => is true then right hand
+       side is also true (each rhs fact will be set as true)
+       if it's false, rhs will remain unchanged
+
+       by default all facts are false
+
+       Inline/line comments is also allowed.
+       Comment must start with '#' symbol,
+       everything from it and to the end of line
+       will be ignored by expert system
+    """
     def __init__(self):
         logging.basicConfig()
         self._lk = lark.Lark.open('expert_system/grammar.lark')
