@@ -19,8 +19,5 @@ class RhsValidator(Transformer):
     def expr_neg(self, child):
         return False
 
-    def fact(self, child):
-        return child[0]
-
     def val(self, child):
         return True
