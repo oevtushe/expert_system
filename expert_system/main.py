@@ -8,6 +8,9 @@ logging.basicConfig()
 
 def main(argc, argv):
     try:
+        if argc != 2:
+            print('Using: python3.6 -m expert_system.main <filename>')
+            sys.exit(1)
         with open(argv[1]) as f:
             content = f.read()
         logging.debug(f'content start (stripped)')
