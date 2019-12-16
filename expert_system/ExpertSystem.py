@@ -147,10 +147,13 @@ class ExpertSystem:
             rules.remove(x)
 
     class _Dep:
+        """Represent _MyGraph node as 'node'
+           and list of vars the rule in the
+           node depends on as 'flst'
+        """
         def __init__(self, node, flst):
             self.node = node
             self.flst = flst
-
 
     def _build_graph(self, qes):
         root = _MyGraph(None)
