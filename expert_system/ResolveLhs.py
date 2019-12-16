@@ -2,7 +2,9 @@ from lark import Transformer
 from lark import Tree
 
 class ResolveLhs(Transformer):
-
+    """Execute operations in lhs using
+       dfs
+    """
     def transform(self, tree, facts):
         self._facts = facts
         return Transformer.transform(self, tree)
